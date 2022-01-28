@@ -1,38 +1,43 @@
-import os
-import datetime
+import sys
+import time
 import dota2gsi
+import win32pipe
+import win32file
+import pywintypes
 
 
-rosha_state = 1
+def send_pipedata(data):
+    pipe = win32pipe.CreateNamedPipe(
+        r"\\.\pipe\dota_data",
+        win32pipe.PIPE_ACCESS_DUPLEX,
+        win32pipe.PIPE_TYPE_MESSAGE
+        | win32pipe.PIPE_READMODE_MESSAGE
+        | win32pipe.PIPE_WAIT,
+        1,
+        65536,
+        65536,
+        0,
+        None,
+    )
 
-def clearConsole():
-    command = 'clear'
-    if os.name in ('nt', 'dos'):
-        command = 'cls'
-    os.system(command)
+    try:
+        win32pipe.ConnectNamedPipe(pipe, None)
+        dota_data = str.encode(f"{data}")
+        win32file.WriteFile(pipe, dota_data)
+    finally:
+        win32file.CloseHandle(pipe)
 
-def print_ability(state, ability):
-    clearConsole()
-    print(f"spell cast: {ability.get('name')}\n"\
-          f"level: {ability.get('level')}\n"\
-          f"cooldown: {ability.get('cooldown')}\n"\
-          f"mana left: {state.get('hero', {}).get('mana')}")
 
 def game_state(last_state, state):
-    clearConsole()
-    global rosha_state
-    time = state['map']['clock_time']
-    rosha_solver(rosha_state)
-    converted = datetime.timedelta(seconds=time)
-    print(f"new state: {converted}\n"\
-          f"rosha_state: {rosha_state}")
+    time = state["map"]["clock_time"]
+    pipe_server(time)
+
 
 def main():
     server = dota2gsi.Server()
     server.on_update(game_state)
-    server.on_ability_cast(print_ability)
     server.start()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
