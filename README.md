@@ -1,5 +1,5 @@
 # Dota2-helper
-Just fun with Dota2 GSI
+Just fun with [Dota2 GSI](https://gitlab.com/avalonparton/dota2gsi)
 
 ### Initial Settings
 Move *gamestate_integration_DotaHelper.cfg* to *steamapps\common\dota 2 beta\game\dota\cfg\gamestate_integration\\*
