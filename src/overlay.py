@@ -1,11 +1,12 @@
 import sys
 import time
+import json
 import win32pipe
 import win32file
 import pywintypes
 
 
-def get_pipedata():
+def get_data():
     quit = False
 
     while not quit:
@@ -24,7 +25,7 @@ def get_pipedata():
             )
 
             result, dota_data = win32file.ReadFile(handle, 64 * 1024)
-            return dota_data
+            return json.loads(dota_data.decode("utf-8"))
         except pywintypes.error as e:
             if e.args[0] == 2:
                 time.sleep(1)
@@ -33,4 +34,4 @@ def get_pipedata():
 
 
 if __name__ == "__main__":
-    pass
+    print(get_data())
