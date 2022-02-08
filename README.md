@@ -11,5 +11,5 @@ Move *gamestate_integration_DotaHelper.cfg* to *steamapps\common\dota 2 beta\gam
 ## Interesting data
 ### What data do we grab from GSI?
 ```json
-{"status": 1, "time": 11, "gold": 699, "gold_reliable": 99, "gold_unreliable": 600, "gold_from_hero_kills": 0, "gold_from_creep_kills": 0, "gold_from_income": 19, "gold_from_shared": 0, "gpm": 527, "xpm": 0, "buyback_cost": 261, "buyback_cooldown": 0}
+{"status": 1, "time": 11, "gold": 699, "gold_reliable": 99, "gold_unreliable": 600, "gold_from_hero_kills": 0, "gold_from_creep_kills": 0, "gold_from_income": 19, "gold_from_shared": 0, "gpm": 527, "xpm": 0}
 ```
