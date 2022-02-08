@@ -47,9 +47,6 @@ def game_state(last_state, state):
 
         dota_data['gpm'] = state["player"]["gpm"]
         dota_data['xpm'] = state["player"]["xpm"]
-        
-        dota_data['buyback_cost'] = state["hero"]["buyback_cost"]
-        dota_data['buyback_cooldown'] = state["hero"]["buyback_cooldown"]
     except:
         dota_data['status'] = 0
 
