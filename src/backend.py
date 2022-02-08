@@ -33,5 +33,21 @@ def get_data():
                 quit = True
 
 
+def rosha_state(time, roshan_death_time) -> [-1, 0, 1]:
+    """
+        -1 - roshan definitely dead
+         0 - roshan possibly alive
+         1 - roshan definitely alive
+    """
+    delta = time - roshan_death_time
+
+    if delta < 8 * 60:
+        return -1
+    elif (delta >= 8 * 60) or (delta <= 11 * 60):
+        return 0
+    elif delta > 11 * 60:
+        return 1
+
+
 if __name__ == "__main__":
     pass
