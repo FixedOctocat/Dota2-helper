@@ -1,10 +1,12 @@
-import PySimpleGUI as sg
 import math
+import PySimpleGUI as sg
+
+from backend import get_data
 
 
 def overlay_gold_helper():
-    text_gmp = "gpm :"
-    text_xpm = "xpm :"
+    text_gmp = "gpm:"
+    text_xpm = "xpm:"
     GRAPH_SIZE = (500, 500)
     DATA_SIZE = (500, 500)
     GRAPH_SIZE_PIE_CHART = (500, 100)
@@ -14,26 +16,35 @@ def overlay_gold_helper():
 
     HORIZONTAL_OFFSET = 43
     BAR_WIDTH = 40
-    gold_from_crips = 10
-    gold_from_heroes = 300
-    passive_gold = 200
-    sum_gold = gold_from_heroes + gold_from_crips + passive_gold
 
     sg.SetOptions(margins=(0,0), element_padding=(0,0))
     graph = sg.Graph(GRAPH_SIZE, (0, 0), DATA_SIZE, background_color='red', key='-GRAPH-')
     layout = [
         [graph],
-        [sg.Button(' pie chart '), sg.Button(' bar ')],
+        [sg.Button(' change view ')],
         [sg.Button(' hide '), sg.Button(' exit ')]
     ]
+
+    flag = True
 
     window = sg.Window('ищу тяночку, кандидатки звоните по телефону 89851144689', layout, background_color='red', transparent_color='red', no_titlebar=True, alpha_channel=.5, grab_anywhere=True, keep_on_top=True).Finalize()
 
     while True:
+        data = get_data()
+    
+        passive_gold = data["gold_from_income"]
+        gold_from_crips = data["gold_from_creep_kills"]
+        gold_from_heroes = data["gold_from_hero_kills"]
+        sum_gold = passive_gold + gold_from_crips + gold_from_heroes
+        print(passive_gold)
+
         event, values = window.Read()
         if event is None or event == ' exit ':
             break
-        if event == ' bar ':
+        if event == ' change view ':
+            flag = not flag
+        if flag:
+            print(1)
             graph.Erase()
             graph.DrawRectangle(top_left=(0, 70 + 500* max(gold_from_crips/sum_gold, gold_from_heroes/sum_gold, passive_gold/sum_gold)), bottom_right=(120, 0), fill_color='grey') ##общий фон
             graph.DrawRectangle(top_left=(BAR_SPACING + EDGE_OFFSET - HORIZONTAL_OFFSET, 500*(gold_from_crips)/(sum_gold) + VERTICAL_OFFSET), ##крипы
@@ -94,8 +105,7 @@ def overlay_gold_helper():
 
             graph.DrawText(text='pink : from crips',
                            location=(BAR_SPACING + EDGE_OFFSET - HORIZONTAL_OFFSET + 48, 55))
-
-        if event == ' pie chart ':
+        else:
             graph.erase()
             graph.DrawRectangle(top_left=(0,200), bottom_right=(120,0), fill_color='grey')
             graph.DrawArc((0, 70), (DATA_SIZE[0] - 380, DATA_SIZE[1] - 300), extent=(gold_from_crips/sum_gold)*360, start_angle=0, arc_color='pink', fill_color='pink')
